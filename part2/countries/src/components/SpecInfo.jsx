@@ -27,12 +27,6 @@ const SpecInfo = ({ countryName }) => {
                 ))}
             </ul>
             <img src={specificInfo.flags.png} alt={specificInfo.flags.alt} />
-
-            <Weather
-                countryName={specificInfo.name.common}
-                lat={specificInfo.latlng[0]}
-                lng={specificInfo.latlng[1]}
-            />
         </div>
     );
 };
