@@ -108,7 +108,8 @@ app.post("/api/persons", (request, response, next) => {
             });
             newPerson
                 .save()
-                .then((result) => {
+                .then((newPerson) => {
+                    response.json(newPerson);
                     console.log(`person saved: ${body.name}`);
                 })
                 .catch((err) => next(err));
