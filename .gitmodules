@@ -1,3 +1,0 @@
-[submodule "part3/cyclic-backend"]
-	path = part3/cyclic-backend
-	url = https://github.com/cyclic-software/starter-express-api.git

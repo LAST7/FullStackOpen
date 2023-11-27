@@ -38,15 +38,18 @@ test("a specific blog is within the returned blogs", async () => {
 }, 100000);
 
 test("a valid blog can be added", async () => {
+    const existingUser = await helper.usersInDB();
+
     // example blog
     const newBlog = {
         title: "This is a blog",
         author: "Some Person",
         url: "www.example.com",
         likes: 123,
+        userId: existingUser[0].id,
     };
 
-    // add the blog to the database,
+    // add the new blog to the database,
     // expecting the return status to be 201 and the returned blog to be json
     await api
         .post("/api/blogs")
@@ -108,4 +111,4 @@ test("a note can be deleted", async () => {
 // Close the connection after all tests are done
 afterAll(async () => {
     await mongoose.connection.close();
-});
+}, 100000);
