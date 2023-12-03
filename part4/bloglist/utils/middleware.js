@@ -22,9 +22,14 @@ const tokenExtractor = (request, response, next) => {
 const userExtractor = async (request, response, next) => {
     const extractedToken = request.token;
     if (extractedToken) {
-        const id = jwt.verify(extractedToken, process.env.SECRET).id;
-        const user = await User.findById(id);
-        request.user = user;
+        try {
+            const id = jwt.verify(extractedToken, process.env.SECRET).id;
+            const user = await User.findById(id);
+            request.user = user;
+        } catch (exception) {
+            // Mostly token expired
+            next(exception);
+        }
     }
 
     next();

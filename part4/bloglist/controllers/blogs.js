@@ -35,14 +35,14 @@ blogsRouter.post("/", async (request, response, next) => {
         return response.status(401).json({ error: "token invalid" });
     }
 
-    const { title, author, url, likes, userId } = request.body;
+    const { title, author, url, likes } = request.body;
     // create the new Blog object and save it to the database
     const newBlog = new Blog({
         title,
-        author,
+        author: author || user.username,
         url,
-        likes: likes === undefined ? 0 : likes,
-        user: userId,
+        likes: likes || 0,
+        user: user.id,
     });
 
     try {
@@ -52,6 +52,7 @@ blogsRouter.post("/", async (request, response, next) => {
         user.blogs = user.blogs.concat(savedBlog._id);
         await user.save();
 
+        // send back the saved blog
         response.status(201).send(savedBlog);
     } catch (exception) {
         next(exception);
@@ -72,7 +73,6 @@ blogsRouter.delete("/:id", async (request, response, next) => {
     try {
         // see if the DELETE request is sent by the author of the blog
         const blog = await Blog.findById(request.params.id);
-        // 
         if (!blog.user.toString() === user.id) {
             return response.status(401).json({ error: "unauthorized action" });
         }
@@ -88,12 +88,12 @@ blogsRouter.delete("/:id", async (request, response, next) => {
 blogsRouter.put("/:id", async (request, response, next) => {
     const body = request.body;
 
-    const newBlog = new Blog({
+    const newBlog = {
         title: body.title,
         author: body.author,
         url: body.url,
         likes: body.likes,
-    });
+    };
 
     try {
         const updatedBlog = await Blog.findByIdAndUpdate(
