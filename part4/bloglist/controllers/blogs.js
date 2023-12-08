@@ -1,7 +1,5 @@
-const jwt = require("jsonwebtoken");
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
-const User = require("../models/users");
 
 blogsRouter.get("/", async (request, response) => {
     const blogs = await Blog.find({}).populate("user", {
@@ -73,7 +71,7 @@ blogsRouter.delete("/:id", async (request, response, next) => {
     try {
         // see if the DELETE request is sent by the author of the blog
         const blog = await Blog.findById(request.params.id);
-        if (!blog.user.toString() === user.id) {
+        if (blog.user.toString() !== user.id) {
             return response.status(401).json({ error: "unauthorized action" });
         }
 

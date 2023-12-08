@@ -64,7 +64,11 @@ const App = () => {
                     />
                 </Togglable>
                 <br />
-                <Blogs blogs={blogs} setBlogs={setBlogs} />
+                <Blogs
+                    blogs={blogs}
+                    setBlogs={setBlogs}
+                    setNotice={setNotice}
+                />
             </div>
         );
     }

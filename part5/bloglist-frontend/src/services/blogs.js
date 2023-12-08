@@ -1,7 +1,8 @@
 import axios from "axios";
 
-const baseUrl = "https://imlast.top/bloglist/api/blogs";
-// const baseUrl = "http://localhost:3003/api/login";
+// WARN: switch baseUrl when deploying
+// const baseUrl = "https://imlast.top/bloglist/api/blogs";
+const baseUrl = "http://localhost:3003/api/blogs";
 
 let token = null;
 

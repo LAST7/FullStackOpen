@@ -1,20 +1,47 @@
 import blogService from "../services/blogs";
 import Togglable from "./Togglable";
 
-const Blogs = ({ blogs, setBlogs }) => {
+const Blogs = ({ blogs, setBlogs, setNotice }) => {
     // sort the blogs accoring to the likes they received
     blogs = blogs.sort((a, b) => b.likes - a.likes);
 
     const deleteBlog = (targetBlog) => {
-        if (
+        const user = JSON.parse(localStorage.getItem("loggedBlogAppUser"));
+        if (targetBlog.author !== user.username) {
+            console.error(
+                `You are ${user.username} and you can not delete blog from ${targetBlog.author}`,
+            );
+            setNotice({
+                msg: "Unauthorized action",
+                type: "error",
+            });
+        } else if (
             window.confirm(
                 `Remove blog -${targetBlog.title}- by ${targetBlog.author}`,
             )
         ) {
-            blogService.clear(targetBlog.id).then((response) => {
-                setBlogs(blogs.filter((b) => b.id !== targetBlog.id));
-            });
+            blogService
+                .clear(targetBlog.id)
+                .then((response) => {
+                    setBlogs(blogs.filter((b) => b.id !== targetBlog.id));
+                })
+                .catch((exception) => {
+                    console.log(exception.response.data);
+                    console.error(exception);
+                    setNotice({
+                        msg: `${exception.response.data.error}`,
+                        type: "error",
+                    });
+                });
         }
+        setTimeout(
+            () =>
+                setNotice({
+                    msg: null,
+                    type: null,
+                }),
+            5000,
+        );
     };
 
     const blogStyle = {
@@ -36,16 +63,26 @@ const Blogs = ({ blogs, setBlogs }) => {
     return (
         <div>
             {blogs.map((blog) => (
-                <div key={blog.id} style={blogStyle}>
+                <div className="blog" key={blog.id} style={blogStyle}>
                     <strong>{blog.title}</strong>
                     <Togglable openButtonLabel="view" closeButtonLabel="hide">
                         <div>{blog.url}</div>
-                        <div>
+                        <div id="like">
                             likes {blog.likes}{" "}
-                            <button onClick={() => addLike(blog)}>like</button>
+                            <button
+                                id="button-like"
+                                onClick={() => addLike(blog)}
+                            >
+                                like
+                            </button>
                         </div>
                         <div>{blog.author}</div>
-                        <button onClick={() => deleteBlog(blog)}>remove</button>
+                        <button
+                            id="button-remove"
+                            onClick={() => deleteBlog(blog)}
+                        >
+                            remove
+                        </button>
                     </Togglable>
                 </div>
             ))}

@@ -18,7 +18,7 @@ const Notification = ({ notice }) => {
         noticeStyle = { ...noticeStyle, color: "red" };
     }
 
-    return <div style={noticeStyle}>{notice.msg}</div>;
+    return <div className="notification" style={noticeStyle}>{notice.msg}</div>;
 };
 
 export default Notification;

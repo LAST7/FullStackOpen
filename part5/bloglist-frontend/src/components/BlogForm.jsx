@@ -54,34 +54,46 @@ const BlogForm = ({ blogs, setBlogs, setNotice }) => {
     };
 
     return (
-        <form onSubmit={addBlog}>
-            <table>
-                <tbody>
-                    <tr>
-                        <td>title: </td>
-                        <td>
-                            <input value={title} onChange={handleTitleChange} />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>author: </td>
-                        <td>
-                            <input
-                                value={author}
-                                onChange={handleAuthorChange}
-                            />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>url: </td>
-                        <td>
-                            <input value={url} onChange={handleUrlChange} />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <button type="submit">save</button>
-        </form>
+        <div className="formDiv">
+            <h2>Create a new blog</h2>
+            <form onSubmit={addBlog}>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>title: </td>
+                            <td>
+                                <input
+                                    id="input-title"
+                                    value={title}
+                                    onChange={handleTitleChange}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>author: </td>
+                            <td>
+                                <input
+                                    id="input-author"
+                                    value={author}
+                                    onChange={handleAuthorChange}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>url: </td>
+                            <td>
+                                <input
+                                    id="input-url"
+                                    value={url}
+                                    onChange={handleUrlChange}
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="submit">save</button>
+            </form>
+        </div>
     );
 };
 

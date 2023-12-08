@@ -48,6 +48,7 @@ const LoginForm = ({ setNotice, setUser }) => {
                 <div className="input" id="input-username">
                     username:{" "}
                     <input
+                        id="username"
                         type="text"
                         value={username}
                         name="Username"
@@ -57,6 +58,7 @@ const LoginForm = ({ setNotice, setUser }) => {
                 <div className="input" id="input-password">
                     password:{" "}
                     <input
+                        id="password"
                         type="password"
                         value={password}
                         name="Password"
