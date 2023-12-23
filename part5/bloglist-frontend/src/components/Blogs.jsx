@@ -7,15 +7,7 @@ const Blogs = ({ blogs, setBlogs, setNotice }) => {
 
     const deleteBlog = (targetBlog) => {
         const user = JSON.parse(localStorage.getItem("loggedBlogAppUser"));
-        if (targetBlog.author !== user.username) {
-            console.error(
-                `You are ${user.username} and you can not delete blog from ${targetBlog.author}`,
-            );
-            setNotice({
-                msg: "Unauthorized action",
-                type: "error",
-            });
-        } else if (
+        if (
             window.confirm(
                 `Remove blog -${targetBlog.title}- by ${targetBlog.author}`,
             )
@@ -32,16 +24,16 @@ const Blogs = ({ blogs, setBlogs, setNotice }) => {
                         msg: `${exception.response.data.error}`,
                         type: "error",
                     });
+                    setTimeout(
+                        () =>
+                            setNotice({
+                                msg: null,
+                                type: null,
+                            }),
+                        5000,
+                    );
                 });
         }
-        setTimeout(
-            () =>
-                setNotice({
-                    msg: null,
-                    type: null,
-                }),
-            5000,
-        );
     };
 
     const blogStyle = {
@@ -66,7 +58,7 @@ const Blogs = ({ blogs, setBlogs, setNotice }) => {
                 <div className="blog" key={blog.id} style={blogStyle}>
                     <strong>{blog.title}</strong>
                     <Togglable openButtonLabel="view" closeButtonLabel="hide">
-                        <div>{blog.url}</div>
+                        <a>{blog.url}</a>
                         <div id="like">
                             likes {blog.likes}{" "}
                             <button
