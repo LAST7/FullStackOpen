@@ -32,7 +32,7 @@ app.use(middleware.requestLogger);
 app.use(middleware.tokenExtractor);
 
 app.use("/api/login", loginRouter);
-app.use("/api/users", usersRouter);
+app.use("/api/users", middleware.checkSignUpParam, usersRouter);
 app.use("/api/blogs", middleware.userExtractor, blogsRouter);
 
 if (process.env.NODE_ENV === "test") {

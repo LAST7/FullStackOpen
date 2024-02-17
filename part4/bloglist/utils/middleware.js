@@ -35,6 +35,21 @@ const userExtractor = async (request, response, next) => {
     next();
 };
 
+const checkSignUpParam = (request, response, next) => {
+    const isSignUpReqest = request.method === "POST";
+
+    if (isSignUpReqest) {
+        const { username, name, password } = request.body;
+        if (!username || !name || !password) {
+            return response.status(400).json({
+                error: "Missing required parameters in the request body",
+            });
+        }
+    }
+
+    next();
+};
+
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: "unknown endpoint" });
 };
@@ -59,6 +74,7 @@ module.exports = {
     requestLogger,
     tokenExtractor,
     userExtractor,
+    checkSignUpParam,
     unknownEndpoint,
     errorHandler,
 };

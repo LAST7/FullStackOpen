@@ -1,0 +1,26 @@
+import React from "react";
+import { render } from "react-dom";
+import { configureStore } from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
+
+import setNotification from "../reducers/notifReducer";
+
+export const renderWithProviders = (
+    ui,
+    {
+        preloadedState = {},
+        store = configureStore({
+            reducer: { notification: setNotification },
+            preloadedState,
+        }),
+    } = {},
+) => {
+    const Wrapper = ({ children }) => (
+        <Provider store={store}>{children}</Provider>
+    );
+
+    return {
+        store,
+        ...render(ui, { wrapper: Wrapper, ...renderOptions }),
+    };
+};

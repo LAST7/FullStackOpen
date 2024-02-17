@@ -1,5 +1,6 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
+const Comment = require("../models/comments");
 
 blogsRouter.get("/", async (request, response) => {
     const blogs = await Blog.find({}).populate("user", {
@@ -19,6 +20,25 @@ blogsRouter.get("/:id", async (request, response, next) => {
         }
     } catch (exception) {
         next(exception);
+    }
+});
+
+blogsRouter.get("/:id/comments/", async (request, response, next) => {
+    try {
+        // check if the requesting blog exists,
+        // error will be caught and handled by middleware
+        const blog = await Blog.findById(request.params.id);
+
+        // extract the comment ids
+        const commentIds = blog.comments;
+
+        const comments = await Promise.all(
+            commentIds.map(async (id) => await Comment.findById(id.toString())),
+        );
+
+        response.status(200).send(comments);
+    } catch (err) {
+        next(err);
     }
 });
 
@@ -42,12 +62,13 @@ blogsRouter.post("/", async (request, response, next) => {
         url,
         likes: likes || 0,
         user: user.id,
+        comments: [],
     });
 
     try {
         const savingBlog = await newBlog.save();
 
-        // save the user to the user collection
+        // save the updated user
         user.blogs = user.blogs.concat(savingBlog._id);
         await user.save();
 
@@ -55,6 +76,29 @@ blogsRouter.post("/", async (request, response, next) => {
         response.status(201).send(savingBlog);
     } catch (exception) {
         next(exception);
+    }
+});
+
+blogsRouter.post("/:id/comments", async (request, response, next) => {
+    try {
+        const blog = await Blog.findById(request.params.id);
+
+        // extract the content of the new comment,
+        // and then save it to DB
+        const { content } = request.body;
+        const newComment = new Comment({
+            content,
+            blog: blog._id,
+        });
+        const savingComment = await newComment.save();
+
+        // save the updated blog
+        blog.comments.push(savingComment);
+        await blog.save();
+
+        response.status(201).send(savingComment);
+    } catch (err) {
+        next(err);
     }
 });
 
@@ -83,11 +127,40 @@ blogsRouter.delete("/:id", async (request, response, next) => {
         // delete the ref from the user object and save it back
         user.blogs = user.blogs.filter((ref) => ref !== deletingBlog._id);
         await user.save();
+
+        // delete the comments
+        deletingBlog.comments.forEach(async (c) => {
+            await Comment.findByIdAndDelete(c.id);
+        });
+
         response.status(204).end();
     } catch (exception) {
         next(exception);
     }
 });
+
+blogsRouter.delete(
+    "/:id/comments/:commentId",
+    async (request, response, next) => {
+        const blogId = request.params.id;
+        const commentId = request.params.commentId;
+        try {
+            await Comment.findByIdAndDelete(commentId);
+
+            // delete the ref in blog
+            const blog = await Blog.findById(blogId);
+            // BUG: ref did not delete
+            blog.comments = blog.comments.filter(
+                (c) => c.toString() !== commentId,
+            );
+            await blog.save();
+
+            response.status(204).end();
+        } catch (err) {
+            next(err);
+        }
+    },
+);
 
 blogsRouter.put("/:id", async (request, response, next) => {
     const body = request.body;
