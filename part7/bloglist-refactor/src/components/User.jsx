@@ -6,7 +6,7 @@ const User = ({ user }) => {
     };
 
     if (!user) {
-        return <div>loading...</div>;
+        return null;
     } else {
         return (
             <div className="user-spec" style={style}>

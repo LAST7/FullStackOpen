@@ -66,11 +66,7 @@ const App = () => {
 
                 <Routes>
                     <Route path="*" element={<Blogs />} />
-                    <Route path="/users" element={<Users />} />
-                    <Route
-                        path="/users/:id"
-                        element={<User user={userSpec} />}
-                    />
+                    <Route path="/users/*" element={<Users />} />
                 </Routes>
                 <br />
             </div>

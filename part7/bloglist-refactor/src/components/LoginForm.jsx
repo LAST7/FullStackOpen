@@ -6,6 +6,8 @@ import { loginUser } from "../reducers/loginReducer";
 
 import blogService from "../services/blogs";
 
+import { Button, Form } from "react-bootstrap";
+
 const LoginForm = () => {
     const dispatch = useDispatch();
 
@@ -38,34 +40,38 @@ const LoginForm = () => {
         // console.log(`logining in with ${username}: ${password}`);
     };
 
+    const style = {
+        maxWidth: 500,
+    };
+
     return (
-        <div>
+        <div style={style} className="login-form">
             <h2>Log in</h2>
-            <form onSubmit={handleLogin}>
-                <div className="input" id="input-username">
-                    username:{" "}
-                    <input
+            <Form onSubmit={handleLogin}>
+                <Form.Group>
+                    <Form.Label>username: </Form.Label>
+                    <Form.Control
                         id="username"
                         type="text"
                         value={username}
-                        name="Username"
                         onChange={({ target }) => setUsername(target.value)}
                     />
-                </div>
-                <div className="input" id="input-password">
-                    password:{" "}
-                    <input
+                </Form.Group>
+
+                <Form.Group>
+                    <Form.Label>password: </Form.Label>
+                    <Form.Control
                         id="password"
                         type="password"
                         value={password}
-                        name="Password"
                         onChange={({ target }) => setPassword(target.value)}
                     />
-                </div>
-                <button type="submit" className="button" id="button-login">
+                </Form.Group>
+                <br />
+                <Button type="submit" size="lg" variant="success">
                     login
-                </button>
-            </form>
+                </Button>
+            </Form>
         </div>
     );
 };
