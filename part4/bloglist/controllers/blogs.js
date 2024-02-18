@@ -125,12 +125,14 @@ blogsRouter.delete("/:id", async (request, response, next) => {
         await Blog.findByIdAndDelete(request.params.id);
 
         // delete the ref from the user object and save it back
-        user.blogs = user.blogs.filter((ref) => ref !== deletingBlog._id);
+        user.blogs = user.blogs.filter(
+            (ref) => ref.toString() !== deletingBlog._id.toString(),
+        );
         await user.save();
 
         // delete the comments
-        deletingBlog.comments.forEach(async (c) => {
-            await Comment.findByIdAndDelete(c.id);
+        deletingBlog.comments.forEach(async (commentId) => {
+            await Comment.findByIdAndDelete(commentId.toString());
         });
 
         response.status(204).end();
