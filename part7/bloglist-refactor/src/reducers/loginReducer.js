@@ -41,6 +41,7 @@ export const setUser = (user) => {
  */
 export const loginUser = (username, password) => {
     return async (dispatch) => {
+        // WARN: should use then & catch
         const user = await loginService.login({ username, password });
 
         dispatch(setUserAction(user));

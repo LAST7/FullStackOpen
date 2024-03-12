@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Route, Routes, useMatch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Menu from "./components/Menu";
@@ -8,7 +8,6 @@ import Togglable from "./components/Togglable";
 import LoginForm from "./components/LoginForm";
 import Blogs from "./components/Blogs";
 import Users from "./components/Users";
-import User from "./components/User";
 
 import blogService from "./services/blogs";
 import { initBlog } from "./reducers/blogReducer";
@@ -35,12 +34,6 @@ const App = () => {
     }, []);
 
     const currentUser = useSelector((state) => state.login);
-    const allUsers = useSelector((state) => state.users);
-
-    const userSpecMatch = useMatch("/users/:id");
-    const userSpec = userSpecMatch
-        ? allUsers.find((u) => u.id === userSpecMatch.params.id)
-        : null;
 
     // logged in / not
     if (currentUser === null) {
